@@ -7,13 +7,13 @@
 using namespace std;
 
 
-// the key-value Pair needed for our project to Store the Data.
-// key is the String and value is the Answer (integer) we will be looking for.
+// the key-value Pair needed for our project to Store the Data in the class Node.
+
 class Node {
 public:
 	string key;
 	int value;
-	Node(string key, int valu) {
+	Node(string key, int value) {
 		this->key = key;
 		this->value = value;
 	}
@@ -21,12 +21,13 @@ public:
 
 
 
+//the LRUCache class which consists of all the Member functions being used for the the System
 
 class LRUCache {
 public:
 	int maxSize;
 	list<Node> l;
-	unordered_map<string,list<Node>::iterator> m;
+	unordered_map<string, list<Node>::iterator> m;
 
 	LRUCache(int maxSize) {
 		this->maxSize = (maxSize > 1) ? maxSize : 1;
@@ -40,9 +41,9 @@ public:
 		else {
 			if (l.size() == maxSize) {
 				Node last = l.back();
-				m.erase(last.key); //Removing from Hashmap
+				m.erase(last.key);	//Removing from Hashmap
 
-				l.pop_back(); //Removing from LinkedList
+				l.pop_back();	//Removing from LinkedList
 			}
 			Node n(key, value);
 			l.push_front(n);
@@ -75,29 +76,46 @@ public:
 int main()
 {
 	LRUCache lru(3);
-	lru.insertKeyValue("mango", 10);
-	lru.insertKeyValue("apple", 20);
-	lru.insertKeyValue("guava", 30);
+	lru.insertKeyValue("apple", 20); 
+	lru.insertKeyValue("mango", 25);
+	lru.insertKeyValue("kiwi", 30);
 
-	cout << lru.mostRecentKey() << "\n";
+	// the cache now consists : kiwi -> mango -> apple
 
-	lru.insertKeyValue("mango", 40);
-	cout << lru.mostRecentKey() << "\n";
+	cout << lru.mostRecentKey() << "\n";	//the most recent key is the last updated key
+
+	lru.insertKeyValue("guava", 40);
+	cout << lru.mostRecentKey() << "\n";	//last updated -> "guava" so, most recent is "guava"
 
 	int* orders = lru.getvalue("mango");
 	if (orders != NULL) {
-		cout << "Order of mango " << *(orders) << "\n";
+		cout << "Order of mango " << *orders << "\n";	//number of mangoes we have
 	}
-	lru.insertKeyValue("banana", 20);
+	cout << lru.mostRecentKey() << "\n";
+
+	lru.insertKeyValue("kiwi", 20);		//Updating value for kiwi
+
+
+	//checking which fruits still exist in the Cache
+	cout << "\n";
 
 	if (lru.getvalue("apple") == NULL) {
 		cout << "apple doesn't exist" << "\n";
 	}
+	else {
+		cout << "Order of apple" << *(lru.getvalue("apple")) << "\n";
+	}
 	if (lru.getvalue("guava") == NULL) {
 		cout << "guava doesn't exist" << "\n";
 	}
-	if (lru.getvalue("banana") == NULL) {
-		cout << "mango doesn't exist" << "\n";
+	else {
+		cout << "Order of guava" << *(lru.getvalue("guava")) << "\n";
+	}
+	if (lru.getvalue("kiwi") == NULL) {
+		cout << "kiwi doesn't exist" << "\n";
+	}
+	else {
+		cout << "Order of kiwi " << *(lru.getvalue("kiwi")) << "\n";
 	}
 	return 0;
 }
